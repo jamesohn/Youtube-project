@@ -6,9 +6,10 @@ const config = require('config'),
   videoList = require('./lib/video-list.js'),
   videoDetail = require('./lib/video-detail.js'),
   authorChannelId = require('./lib/youtube_authorChannelId_node.js'),
-  crawler = require('./lib/crawler0.js')
-
-// 'UC5xK2Xdrud3-KGjkS1Igumg','UC4xKdmAXFh4ACyhpiQ_3qBw','UCV0qA-eDDICsRR9rPcnG7tw'
+  crawler = require('./lib/crawler0.js'),
+  stuff = require('./lib/stuff.js')
+// 1M dance studio,보겸, j.fla,대도서관, 벤쯔, 씬님, 테크리드,조마테크,포프tv,과학쿠키
+// 'UCw8ZhLPdQ0u_Y-TLKd61hGA','UCu9BCtGIEr73LXZsKmoujKw','UClkRzsdvg7_RKVhwDwiDZOA','UCSHVH_AWVUc-C8-D8mh8W6A','UCYx9lhCw0u2-OoqVtEU0IMg','UC5xK2Xdrud3-KGjkS1Igumg','UC4xKdmAXFh4ACyhpiQ_3qBw','UCV0qA-eDDICsRR9rPcnG7tw', 'UC63J0Q5huHSlbNT3KxvAaHQ', 'UCmgRYMK5d65PbjN8qkjAUBA'
 /* load channel-list from csv*/
 var channel_raw = ['UC5xK2Xdrud3-KGjkS1Igumg'],
   channel_list = [],
@@ -36,24 +37,25 @@ const main = async (channel) => {
     console.log('Video List ' + channel + ' done')
 
     for(const videoId of video_list){
-      videocomment[channel].push(await videoDetail(dir_name, videoId))
+      videocomment[channel].push({ videoId: videoId, commentCount: await videoDetail(dir_name, videoId) })
       console.log(channel+' videocomment ' + videoId + ' done');
-    }
+    } // Makeing obj at index is faster than making and returning it from videoDetail
     i=0;
     for(const obj of videocomment[channel]){
-      console.log(i+' '+await authorChannelId(channel, obj.videoId, obj.commentCount));
-      // commentAuthorChannelId_list[channel] = commentAuthorChannelId_list[channel].concat(await authorChannelId(channel, obj.videoId, obj.commentCount))
-      // commentAuthorChannelId_list = await authorChannelId(channel, obj.videoId, obj.commentCount)
-      i++
-      // console.log(i+' '+channel +' '+ commentAuthorChannelId_list[channel].length);
-      if(commentAuthorChannelId_list[channel].length>200000){
-        console.log('comment over 200,000');
-        crawler.crawler(channel,commentAuthorChannelId_list[channel])
+      commentAuthorChannelId_list[channel] = commentAuthorChannelId_list[channel].concat(await authorChannelId(channel, obj.videoId, obj.commentCount));
+      console.log(channel+': '+commentAuthorChannelId_list[channel].length);
+
+      if(commentAuthorChannelId_list[channel].length>100000){
+        let result = stuff.uniq(commentAuthorChannelId_list[channel]);
+        console.log(channel+': '+result.length+' sample comments');
+        crawler.crawler(channel,result)
         delete commentAuthorChannelId_list[channel]
-        break
+        return 'done'
       }
     }
-    crawler.crawler(channel,commentAuthorChannelId_list[channel])
+    let result1 = stuff.uniq(commentAuthorChannelId_list[channel])
+    console.log(channel+': '+result1.length+' sample comments');
+    crawler.crawler(channel,result1)
     delete commentAuthorChannelId_list[channel]
   } catch (error){
     console.log(error)

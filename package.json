@@ -18,7 +18,11 @@
   "homepage": "https://github.com/TaeBbong/youtube_crawler#readme",
   "dependencies": {
     "async-retry": "^1.2.1",
+    "cheerio": "^1.0.0-rc.2",
     "config": "^1.30.0",
+    "crawler": "^1.1.2",
+    "franc-cli": "^5.0.0",
+    "math": "0.0.3",
     "request": "^2.85.0",
     "request-promise": "^4.2.2"
   }

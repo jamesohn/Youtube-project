@@ -53,7 +53,7 @@ module.exports = {
     },
   },
   videoDetail: {
-    api_key: 'AIzaSyD4OiN3CC8FtDujdkyDsOCBQJdrOTyoeDE',
+    api_key: 'AIzaSyCZyVxgyR6x6AFDd3BOjoIr0H-vyWrGygo',
     base_url: 'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics',
     retryOpt: {
       retries: 5,

@@ -55,7 +55,9 @@ const config = require('config'),
 // // 'https://www.youtube.com/user/sleepshin',
 // // 'https://www.youtube.com/user/GIRI4193'
 /* load channel-list from csv*/
-var channel_raw = ['UC5xK2Xdrud3-KGjkS1Igumg'],
+// UCV0qA-eDDICsRR9rPcnG7tw
+// UC4xKdmAXFh4ACyhpiQ_3qBw
+var channel_raw = ['UCfuyBWU_JLXvf5TMM-IGvrA','UCKmkpoEqg1sOMGEiIysP8Tw'],
   channel_list = [],
   videocomment = {},
   commentAuthorChannelId_list = {}
@@ -89,6 +91,7 @@ const main = async (channel) => {
     i=0;
     for(const obj of videocomment[channel]){
       commentAuthorChannelId_list[channel] = commentAuthorChannelId_list[channel].concat(await authorChannelId(channel, obj.videoId, obj.commentCount));
+      console.log(commentAuthorChannelId_list[channel]);
       console.log(channel+': '+commentAuthorChannelId_list[channel].length);
 
       if(stuff.uniq(commentAuthorChannelId_list[channel]).length>50000){

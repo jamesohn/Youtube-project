@@ -16,7 +16,7 @@ module.exports = {
     }
   },
   channelDetail: {
-    api_key: 'AIzaSyD4OiN3CC8FtDujdkyDsOCBQJdrOTyoeDE',
+    api_key: 'AIzaSyCVW1-bw1zkX4NQMLe8NxP-6wpw1mUSraU',
     base_url: 'https://www.googleapis.com/youtube/v3/channels?part=id,snippet,statistics',
     retryOpt: {
       retries: 5,
@@ -40,7 +40,7 @@ module.exports = {
     },
   },
   videoList: {
-    api_key: 'AIzaSyD4OiN3CC8FtDujdkyDsOCBQJdrOTyoeDE',
+    api_key: 'AIzaSyCVW1-bw1zkX4NQMLe8NxP-6wpw1mUSraU',
     base_url: 'https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&order=date&maxResults=50',
     retryOpt: {
       retries: 5,
@@ -53,7 +53,7 @@ module.exports = {
     },
   },
   videoDetail: {
-    api_key: 'AIzaSyCZyVxgyR6x6AFDd3BOjoIr0H-vyWrGygo',
+    api_key: 'AIzaSyCVW1-bw1zkX4NQMLe8NxP-6wpw1mUSraU',
     base_url: 'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics',
     retryOpt: {
       retries: 5,

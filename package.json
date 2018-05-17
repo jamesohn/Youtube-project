@@ -24,6 +24,10 @@
     "franc-cli": "^5.0.0",
     "math": "0.0.3",
     "request": "^2.85.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "date-utils": "^1.2.21",
+    "elasticsearch": "^14.2.2",
+    "mkdirp": "^0.5.1",
+    "p-queue": "^2.4.1"
   }
 }

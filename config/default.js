@@ -3,6 +3,9 @@
 // api_key = AIzaSyCVW1-bw1zkX4NQMLe8NxP-6wpw1mUSraU
 module.exports = {
   api_key: '',
+  crawlerOpt: {
+    json: true,
+  },
   commentThreads: {
     retryOpt: {
       retries: 5,
@@ -17,6 +20,6 @@ module.exports = {
         maxResults: 100,
       },
       json: true,
-    }
+    },
   }
 }

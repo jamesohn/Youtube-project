@@ -13,13 +13,13 @@ const config = require('config'),
   mkdirp = promisify(require('mkdirp'))
 
 let channelRaw = fs.readFileSync('./filtered.csv', 'utf8').split(/\r?\n/),
-// ['UC4xKdmAXFh4ACyhpiQ_3qBw'],
+// ['UC4xKdmAXFh4ACyhpiQ_3qBw']fs.readFileSync('./filtered.csv', 'utf8').split(/\r?\n/),
   channelList = [];
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   for (let channel of channelRaw) {
-    // channelList.push(channel)
-    channelList.push(channel.substring(31))
+    channelList.push(channel)
+    // channelList.push(channel.substring(31))
   }
 }
 const main = async (channelList) => {

@@ -17,6 +17,7 @@ lib64/
 parts/
 sdist/
 var/
+face_recog/
 *.egg-info/
 .installed.cfg
 *.egg

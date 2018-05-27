@@ -7,8 +7,7 @@ const config = require('config'),
   promisify = require('util').promisify,
   cluster = require('cluster'),
   Pqueue = require('p-queue'),
-  pqueueAuthorChannelId = new Pqueue({ concurrency: 1000 }),
-  pqueuecrawler = new Pqueue ({ concurrency:1000 }),
+  pqueueAuthorChannelId = new Pqueue({ concurrency: 20 }),
   numCPUs = require('os').cpus().length,
   mkdirp = promisify(require('mkdirp'))
 
@@ -18,8 +17,8 @@ let channelRaw = fs.readFileSync('./filtered.csv', 'utf8').split(/\r?\n/),
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   for (let channel of channelRaw) {
-    channelList.push(channel)
-    // channelList.push(channel.substring(31))
+    // channelList.push(channel)
+    channelList.push(channel.substring(31))
   }
 }
 const main = async (channelList) => {

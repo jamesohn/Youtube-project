@@ -1,6 +1,3 @@
-// api_key = AIzaSyD4OiN3CC8FtDujdkyDsOCBQJdrOTyoeDE
-// api_key = AIzaSyCZyVxgyR6x6AFDd3BOjoIr0H-vyWrGygo
-// api_key = AIzaSyCVW1-bw1zkX4NQMLe8NxP-6wpw1mUSraU
 module.exports = {
   api_key: '',
   crawlerOpt: {

@@ -14,22 +14,35 @@ const config = require('config'),
 cluster.schedulingPolicy = cluster.SCHED_RR;
 
 if(cluster.isMaster) {
-
-  let channelRaw = fs.readFileSync('./filtered.csv', 'utf8').split(/\r?\n/),
-  // ['UC4xKdmAXFh4ACyhpiQ_3qBw']fs.readFileSync('./filtered.csv', 'utf8').split(/\r?\n/),
-    channelList = ['UCV0qA-eDDICsRR9rPcnG7tw','UC4xKdmAXFh4ACyhpiQ_3qBw'];
-  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    for (let channel of channelRaw) {
-      // channelList.push(channel)
-      channelList.push(channel.substring(31))
+  // This is done
+  const dirPath = './locale_Test';
+  const previous = fs.readdirSync(dirPath,'utf8',function(err,files){
+    return files
+    if(err) console.log(err);
+  });
+  // Skip previously done channels
+  function fromLastChannel() {
+    let channelRaw = fs.readFileSync('./filtered.csv', 'utf8').split(/\r?\n/),
+      channelList = [];
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      for (let channel of channelRaw) {
+        channelList.push(channel.substring(31))
+      }
     }
+    for(let each of previous) {
+      channelList.shift()
+    }
+    return channelList
   }
-  // Keep track of http requests
+  // Make new channelList
+  let channelList = fromLastChannel();
+  // Keep track worker and finished channel
   let numReqs = 0;
+  let totalDone = previous.length + numReqs
+  let workerNum = 4;
   setInterval(() => {
-    console.log(`${numReqs} done`);
+    console.log(`Done: ${numReqs}, Total: ${totalDone} done\nWorking: ${workerNum}`);
   }, 1000);
-
   // Count requests
   function messageHandler(msg) {
     if (typeof msg === 'string') {
@@ -37,6 +50,7 @@ if(cluster.isMaster) {
       console.log(msg);
     }
   }
+  // Fork workers
   for(let i = 0; i < numCPUs; i++) {
     let worker = cluster.fork();
     if(channelList.length > 0){
@@ -44,6 +58,7 @@ if(cluster.isMaster) {
       worker.send(channel)
     }
   }
+  // When a worker finishes work, distribute new work
   for(const id in cluster.workers) {
     cluster.workers[id].on('message', function(message){
       messageHandler(message)
@@ -53,15 +68,20 @@ if(cluster.isMaster) {
       }
     })
   }
+  // Notifi when worker died
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+    worker -= 1;
+  });
 }
-
+// Recieve task and send message back to master if work is done
 if(cluster.isWorker) {
   process.on('message', (message) => {
     try {
       console.log(`${cluster.worker.id} starts ` + message);
       pqueueAuthorChannelId.add(() => authorChannelId.collect(message))
       .then(function(result) {
-        console.log(result);
+
         process.send(result)
       })
     } catch (e) {

@@ -15,11 +15,25 @@ cluster.schedulingPolicy = cluster.SCHED_RR;
 
 if(cluster.isMaster) {
   // This is done
-  const dirPath = './locale_Test';
-  const previous = fs.readdirSync(dirPath,'utf8',function(err,files){
-    return files
-    if(err) console.log(err);
-  });
+  const dirPath = './locale_Test2';
+  const previous = fs.readdirSync(dirPath,'utf8');
+
+  function removeDone(channelList,previous) {
+    let set = new Set(),
+      feed = []
+
+    if ((typeof channelList === 'object' && typeof previous === 'object')) {
+      for(let channel of previous) set.add(channel)
+      for(let channel of channelList) {
+        if(!set.has(channel)) feed.push(channel)
+      }
+      console.log(set.size);
+      return feed
+    }
+    else {
+      console.log('Func removeDone Input type error');
+    }
+  }
   // Skip previously done channels
   function fromLastChannel() {
     let channelRaw = fs.readFileSync('./filtered.csv', 'utf8').split(/\r?\n/),
@@ -29,13 +43,18 @@ if(cluster.isMaster) {
         channelList.push(channel.substring(31))
       }
     }
-    for(let each of previous) {
-      channelList.shift()
+    let feed = removeDone(channelList,previous)
+
+    for(let filen of previous) {
+      let content = fs.readFileSync(`${dirPath}/${filen}`, 'utf8')
+      if(content === '') feed.unshift(filen.split('.')[0])
     }
-    return channelList
+
+    return feed
   }
   // Make new channelList
-  let channelList = fromLastChannel();
+  let feed = fromLastChannel();
+
   // Keep track worker and finished channel
   let numReqs = 0;
   let totalDone = previous.length + numReqs
@@ -53,8 +72,8 @@ if(cluster.isMaster) {
   // Fork workers
   for(let i = 0; i < numCPUs; i++) {
     let worker = cluster.fork();
-    if(channelList.length > 0){
-      let channel = channelList.shift()
+    if(feed.length > 0){
+      let channel = feed.shift()
       worker.send(channel)
     }
   }
@@ -62,8 +81,8 @@ if(cluster.isMaster) {
   for(const id in cluster.workers) {
     cluster.workers[id].on('message', function(message){
       messageHandler(message)
-      if(channelList.length > 0){
-        let channel = channelList.shift()
+      if(feed.length > 0){
+        let channel = feed.shift()
         cluster.workers[id].send(channel)
       }
     })

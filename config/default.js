@@ -9,6 +9,25 @@ module.exports = {
     json: true,
   },
   commentThreads: {
+    parquet: {
+      schema: {
+        id: { type: 'UTF8' },
+        commentCount: { type: 'INT64' },
+        crawledCount: { type: 'INT64' },
+        locale: { type: 'object' },
+        cpm: { type: 'FLOAT64' },
+      },
+      option: {
+        useDataPageV2: true,
+      },
+    },
+    s3: {
+      bucket: '',
+    },
+    dynamodb: {
+      tableName: '',
+      ttl: 30 * 24 * 60 * 60,
+    },
     requestOpt: {
       url: 'https://www.googleapis.com/youtube/v3/commentThreads',
       qs: {

@@ -15,10 +15,13 @@ cluster.schedulingPolicy = cluster.SCHED_RR;
 
 if(cluster.isMaster) {
   // This is done
-  const dirPath = './locale_Test';
+  const dirPath = './locale_Test2';
   const previous = fs.readdirSync(dirPath,'utf8',function(err,files){
-    return files
     if(err) console.log(err);
+    for (i=0; i<5; i++){
+      files.splice(0,0);
+    }
+    return files
   });
   // Skip previously done channels
   function fromLastChannel() {
@@ -38,7 +41,7 @@ if(cluster.isMaster) {
   let channelList = fromLastChannel();
   // Keep track worker and finished channel
   let numReqs = 0;
-  let totalDone = previous.length + numReqs
+  let totalDone = previous.length
   let workerNum = 4;
   setInterval(() => {
     console.log(`Done: ${numReqs}, Total: ${totalDone} done\nWorking: ${workerNum}`);
@@ -47,6 +50,7 @@ if(cluster.isMaster) {
   function messageHandler(msg) {
     if (typeof msg === 'string') {
       numReqs += 1;
+      totalDone += 1;
       console.log(msg);
     }
   }

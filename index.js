@@ -15,7 +15,7 @@ cluster.schedulingPolicy = cluster.SCHED_RR;
 
 if(cluster.isMaster) {
   // This is done
-  const dirPath = './locale_Test2';
+  const dirPath = './locale_Test';
   const previous = fs.readdirSync(dirPath,'utf8');
 
   function removeDone(channelList,previous) {
@@ -23,11 +23,10 @@ if(cluster.isMaster) {
       feed = []
 
     if ((typeof channelList === 'object' && typeof previous === 'object')) {
-      for(let channel of previous) set.add(channel)
+      for(let channel of previous) set.add(channel.split('.')[0])
       for(let channel of channelList) {
         if(!set.has(channel)) feed.push(channel)
       }
-      console.log(set.size);
       return feed
     }
     else {
@@ -57,7 +56,7 @@ if(cluster.isMaster) {
 
   // Keep track worker and finished channel
   let numReqs = 0;
-  let totalDone = previous.length + numReqs
+  let totalDone = previous.length
   let workerNum = 4;
   setInterval(() => {
     console.log(`Done: ${numReqs}, Total: ${totalDone} done\nWorking: ${workerNum}`);
@@ -66,6 +65,7 @@ if(cluster.isMaster) {
   function messageHandler(msg) {
     if (typeof msg === 'string') {
       numReqs += 1;
+      totalDone += 1;
       console.log(msg);
     }
   }
